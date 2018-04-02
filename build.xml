@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<project default="jar" basedir=".">
+	<property name="app.name" value="banhui-client" />
+	<property name="app.jar" value="${app.name}.jar" />
+	<property name="app.copyright" value="" />
+
+	<property name="src.dir" value="src" />
+	<property name="image.dir" value="image" />
+	<property name="src.encoding" value="utf-8" />
+	<property name="lib.dir" value="lib" />
+	<property name="build.dir" value="build" />
+	<property name="dist.dir" value="dist" />
+	<property name="docs.dir" value="docs" />
+	<property name="mainclass" value="p2p.banhui.frame.MainFrame"/> 
+
+	<!-- 第三方jar包的路径 -->  
+	<path id="lib-classpath">  
+		<fileset dir="${lib.dir}">  
+			<include name="**/*.jar"/>  
+		</fileset>  
+	</path>
+	
+	<!--1.初始化工作，如创建目录等 -->
+	<target name="init">
+		<delete dir="${build.dir}" failonerror="false" />
+		<mkdir dir="${build.dir}" />
+		<mkdir dir="${dist.dir}" />
+	</target>
+
+	<!--2.编译  -->
+	<target name="compile" depends="init">
+		<javac srcdir="${src.dir}" excludes="**/test/**" destdir="${build.dir}" debug="true" encoding="${src.encoding}" includeantruntime="false">
+			<compilerarg line="-encoding UTF-8"/>  
+			<classpath refid="lib-classpath"/>
+			<classpath>
+				<fileset dir="${lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</javac>
+		<copy todir="${build.dir}/${image.dir}" overwrite="true" force="true" quiet="true" failonerror="false">
+			<fileset dir="${image.dir}">
+			</fileset>
+		</copy> 
+		
+	</target>
+
+	<!--3.打包jar文件 -->
+	<target name="jar" depends="compile">  
+		<delete file="${dist.dir}/${app.jar}" failonerror="false" />
+		<copy file="${src.dir}/log4j.properties" tofile="${build.dir}/log4j.properties" overwrite="true" force="true" verbose="true" />
+		<copy file="${src.dir}/armory-web.properties" tofile="${build.dir}/armory-web.properties" overwrite="true" force="true" verbose="true" />
+		<copy file="${src.dir}/conf_en_US.properties" tofile="${build.dir}/conf_en_US.properties" overwrite="true" force="true" verbose="true" />
+		<copy file="${src.dir}/conf_zh_CN.properties" tofile="${build.dir}/conf_zh_CN.properties" overwrite="true" force="true" verbose="true" />
+		<!--
+		<copy todir="${dist.dir}/${image.dir}">
+			<fileset dir="${image.dir}">
+			</fileset>
+		</copy>
+		-->
+		<!-- 此列可用以下zipgroupfileset替代  -->
+		<!-- 
+		<copy todir="${dist.dir}/lib">  
+			<fileset dir="${lib.dir}"/>  
+		</copy> 
+	 	 -->
+		<pathconvert property="mf.classpath" pathsep=" ">  
+			<mapper>  
+				<chainedmapper>  
+		        	<!-- jar包文件只留文件名，去掉目录信息 -->  
+		        	<flattenmapper/>  
+		            <!-- add lib/ prefix -->  
+					<globmapper from="*" to="lib/*"/>  
+				</chainedmapper>  
+			</mapper>  
+			<path refid="lib-classpath"/>  
+		</pathconvert>
+		
+	    <!-- jar文件的输出路径 -->  
+	    <jar destfile="${dist.dir}/${app.jar}" basedir="${build.dir}">  
+	    	<zipgroupfileset dir="${lib.dir}" includes="*.jar" /> 
+	    	<fileset dir="${dist.dir}"></fileset> 
+	    	<manifest>  
+	            <attribute name="Main-class" value="${mainclass}"/>  
+	            <attribute name="Class-Path" value="${mf.classpath}"/>  
+	        </manifest>  
+	    </jar>  
+	</target>
+	
+</project>
