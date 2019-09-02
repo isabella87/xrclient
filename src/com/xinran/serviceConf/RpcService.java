@@ -21,8 +21,8 @@ public class RpcService {
 		/**
 		 * "http://www.banbank.com" "http://192.168.11.114"
 		 */
-//		static final String ROOT_URL = "http://localhost";
-		static final String ROOT_URL = "http://www.mengchengkeji.com";
+		static final String ROOT_URL = "http://localhost";
+//		static final String ROOT_URL = "http://www.mengchengkeji.com";
 		static final String INFO_CREATE_URL = ROOT_URL + "/xrsrv/info";
 		static final String INFO_QUERY_URL = ROOT_URL + "/xrsrv/info/all/bg";
 		static final String PRODUCT_UPLOAD_URL = ROOT_URL

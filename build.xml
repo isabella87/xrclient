@@ -11,7 +11,7 @@
 	<property name="build.dir" value="build" />
 	<property name="dist.dir" value="dist" />
 	<property name="docs.dir" value="docs" />
-	<property name="mainclass" value="p2p.banhui.frame.MainFrame"/> 
+	<property name="mainclass" value="com.xinran.frame.MainFrame"/>
 
 	<!-- 第三方jar包的路径 -->  
 	<path id="lib-classpath">  
